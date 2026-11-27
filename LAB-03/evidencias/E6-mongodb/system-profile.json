@@ -1,0 +1,464 @@
+﻿[
+  {
+    "op": "command",
+    "ns": "comercial.clientes",
+    "command": {
+      "aggregate": "clientes",
+      "pipeline": [
+        {
+          "$match": {}
+        },
+        {
+          "$group": {
+            "_id": 1,
+            "n": {
+              "$sum": 1
+            }
+          }
+        }
+      ],
+      "cursor": {},
+      "lsid": {
+        "id": "d273571d-c272-4b61-bbed-14fa9a814ef3"
+      },
+      "$db": "comercial"
+    },
+    "keysExamined": 0,
+    "docsExamined": 3,
+    "cursorExhausted": true,
+    "numYield": 0,
+    "nreturned": 1,
+    "queryHash": "773D8541",
+    "planCacheKey": "773D8541",
+    "queryFramework": "classic",
+    "locks": {
+      "FeatureCompatibilityVersion": {
+        "acquireCount": {
+          "r": {
+            "high": 0,
+            "low": 2,
+            "unsigned": false
+          }
+        }
+      },
+      "Global": {
+        "acquireCount": {
+          "r": {
+            "high": 0,
+            "low": 2,
+            "unsigned": false
+          }
+        }
+      }
+    },
+    "flowControl": {},
+    "responseLength": 131,
+    "protocol": "op_msg",
+    "cpuNanos": 193714,
+    "millis": 0,
+    "planSummary": "COLLSCAN",
+    "planningTimeMicros": 45,
+    "ts": "2026-11-27T03:10:59.974Z",
+    "client": "127.0.0.1",
+    "appName": "mongosh 2.14.2",
+    "allUsers": [],
+    "user": ""
+  },
+  {
+    "op": "command",
+    "ns": "comercial.system.profile",
+    "command": {
+      "aggregate": "system.profile",
+      "pipeline": [
+        {
+          "$match": {}
+        },
+        {
+          "$group": {
+            "_id": 1,
+            "n": {
+              "$sum": 1
+            }
+          }
+        }
+      ],
+      "cursor": {},
+      "lsid": {
+        "id": "d273571d-c272-4b61-bbed-14fa9a814ef3"
+      },
+      "$db": "comercial"
+    },
+    "keysExamined": 0,
+    "docsExamined": 3,
+    "cursorExhausted": true,
+    "numYield": 0,
+    "nreturned": 1,
+    "queryHash": "773D8541",
+    "planCacheKey": "773D8541",
+    "queryFramework": "classic",
+    "locks": {
+      "FeatureCompatibilityVersion": {
+        "acquireCount": {
+          "r": {
+            "high": 0,
+            "low": 2,
+            "unsigned": false
+          }
+        }
+      },
+      "Global": {
+        "acquireCount": {
+          "r": {
+            "high": 0,
+            "low": 2,
+            "unsigned": false
+          }
+        }
+      }
+    },
+    "flowControl": {},
+    "responseLength": 137,
+    "protocol": "op_msg",
+    "cpuNanos": 268077,
+    "millis": 0,
+    "planSummary": "COLLSCAN",
+    "planningTimeMicros": 44,
+    "ts": "2026-11-27T03:10:59.966Z",
+    "client": "127.0.0.1",
+    "appName": "mongosh 2.14.2",
+    "allUsers": [],
+    "user": ""
+  },
+  {
+    "op": "update",
+    "ns": "comercial.clientes",
+    "command": {
+      "q": {
+        "cliente_id_pg": 2
+      },
+      "u": {
+        "$set": {
+          "telefono": "6672003344"
+        }
+      },
+      "multi": false,
+      "upsert": false
+    },
+    "keysExamined": 0,
+    "docsExamined": 2,
+    "nMatched": 1,
+    "nModified": 1,
+    "nUpserted": 0,
+    "keysInserted": 0,
+    "keysDeleted": 0,
+    "numYield": 0,
+    "locks": {
+      "ParallelBatchWriterMode": {
+        "acquireCount": {
+          "r": {
+            "high": 0,
+            "low": 1,
+            "unsigned": false
+          }
+        }
+      },
+      "FeatureCompatibilityVersion": {
+        "acquireCount": {
+          "w": {
+            "high": 0,
+            "low": 1,
+            "unsigned": false
+          }
+        }
+      },
+      "ReplicationStateTransition": {
+        "acquireCount": {
+          "w": {
+            "high": 0,
+            "low": 1,
+            "unsigned": false
+          }
+        }
+      },
+      "Global": {
+        "acquireCount": {
+          "w": {
+            "high": 0,
+            "low": 1,
+            "unsigned": false
+          }
+        }
+      },
+      "Database": {
+        "acquireCount": {
+          "w": {
+            "high": 0,
+            "low": 1,
+            "unsigned": false
+          }
+        }
+      },
+      "Collection": {
+        "acquireCount": {
+          "w": {
+            "high": 0,
+            "low": 1,
+            "unsigned": false
+          }
+        }
+      }
+    },
+    "flowControl": {
+      "acquireCount": {
+        "high": 0,
+        "low": 1,
+        "unsigned": false
+      }
+    },
+    "cpuNanos": 306747,
+    "millis": 0,
+    "planSummary": "COLLSCAN",
+    "planningTimeMicros": 89,
+    "execStats": {
+      "stage": "UPDATE",
+      "nReturned": 0,
+      "executionTimeMillisEstimate": 0,
+      "works": 3,
+      "advanced": 0,
+      "needTime": 2,
+      "needYield": 0,
+      "saveState": 0,
+      "restoreState": 0,
+      "isEOF": 1,
+      "nMatched": 1,
+      "nWouldModify": 1,
+      "nWouldUpsert": 0,
+      "inputStage": {
+        "stage": "COLLSCAN",
+        "filter": {
+          "cliente_id_pg": {
+            "$eq": 2
+          }
+        },
+        "nReturned": 1,
+        "executionTimeMillisEstimate": 0,
+        "works": 2,
+        "advanced": 1,
+        "needTime": 1,
+        "needYield": 0,
+        "saveState": 1,
+        "restoreState": 1,
+        "isEOF": 0,
+        "direction": "forward",
+        "docsExamined": 2
+      }
+    },
+    "ts": "2026-11-27T03:10:59.901Z",
+    "client": "127.0.0.1",
+    "appName": "mongosh 2.14.2",
+    "allUsers": [],
+    "user": ""
+  },
+  {
+    "op": "query",
+    "ns": "comercial.clientes",
+    "command": {
+      "find": "clientes",
+      "filter": {
+        "ciudad": "Culiacán"
+      },
+      "lsid": {
+        "id": "d273571d-c272-4b61-bbed-14fa9a814ef3"
+      },
+      "$db": "comercial"
+    },
+    "keysExamined": 0,
+    "docsExamined": 3,
+    "nBatches": 1,
+    "cursorExhausted": true,
+    "numYield": 0,
+    "nreturned": 2,
+    "queryHash": "14EB4ABA",
+    "planCacheKey": "14EB4ABA",
+    "queryFramework": "classic",
+    "locks": {
+      "FeatureCompatibilityVersion": {
+        "acquireCount": {
+          "r": {
+            "high": 0,
+            "low": 1,
+            "unsigned": false
+          }
+        }
+      },
+      "Global": {
+        "acquireCount": {
+          "r": {
+            "high": 0,
+            "low": 1,
+            "unsigned": false
+          }
+        }
+      }
+    },
+    "flowControl": {},
+    "responseLength": 494,
+    "protocol": "op_msg",
+    "cpuNanos": 468702,
+    "millis": 0,
+    "planSummary": "COLLSCAN",
+    "planningTimeMicros": 328,
+    "execStats": {
+      "stage": "COLLSCAN",
+      "filter": {
+        "ciudad": {
+          "$eq": "Culiacán"
+        }
+      },
+      "nReturned": 2,
+      "executionTimeMillisEstimate": 0,
+      "works": 4,
+      "advanced": 2,
+      "needTime": 1,
+      "needYield": 0,
+      "saveState": 0,
+      "restoreState": 0,
+      "isEOF": 1,
+      "direction": "forward",
+      "docsExamined": 3
+    },
+    "ts": "2026-11-27T03:10:59.889Z",
+    "client": "127.0.0.1",
+    "appName": "mongosh 2.14.2",
+    "allUsers": [],
+    "user": ""
+  },
+  {
+    "op": "insert",
+    "ns": "comercial.clientes",
+    "command": {
+      "insert": "clientes",
+      "documents": [
+        {
+          "cliente_id_pg": 1,
+          "nombre": "Ana López",
+          "correo": "ana.lopez@example.test",
+          "rfc": "LOAA850315AB1",
+          "ciudad": "Culiacán",
+          "segmento": "retail",
+          "origen": "tienda_web",
+          "_id": "6b08f4c39c9bbb81e5d1d1d3"
+        },
+        {
+          "cliente_id_pg": 2,
+          "nombre": "María García",
+          "correo": "maria.garcia@example.test",
+          "rfc": "GAMA900412XY8",
+          "ciudad": "Culiacán",
+          "segmento": "pyme",
+          "origen": "tienda_web",
+          "_id": "6b08f4c39c9bbb81e5d1d1d4"
+        },
+        {
+          "cliente_id_pg": 3,
+          "nombre": "Carlos Mendoza",
+          "correo": "carlos.mendoza@example.test",
+          "rfc": "MECC880720KL3",
+          "ciudad": "Mazatlán",
+          "segmento": "corporativo",
+          "origen": "tienda_web",
+          "_id": "6b08f4c39c9bbb81e5d1d1d5"
+        }
+      ],
+      "ordered": true,
+      "lsid": {
+        "id": "d273571d-c272-4b61-bbed-14fa9a814ef3"
+      },
+      "$db": "comercial"
+    },
+    "ninserted": 3,
+    "keysInserted": 3,
+    "numYield": 0,
+    "locks": {
+      "ParallelBatchWriterMode": {
+        "acquireCount": {
+          "r": {
+            "high": 0,
+            "low": 3,
+            "unsigned": false
+          }
+        }
+      },
+      "FeatureCompatibilityVersion": {
+        "acquireCount": {
+          "w": {
+            "high": 0,
+            "low": 3,
+            "unsigned": false
+          }
+        }
+      },
+      "ReplicationStateTransition": {
+        "acquireCount": {
+          "w": {
+            "high": 0,
+            "low": 3,
+            "unsigned": false
+          }
+        }
+      },
+      "Global": {
+        "acquireCount": {
+          "w": {
+            "high": 0,
+            "low": 3,
+            "unsigned": false
+          }
+        }
+      },
+      "Database": {
+        "acquireCount": {
+          "w": {
+            "high": 0,
+            "low": 3,
+            "unsigned": false
+          }
+        }
+      },
+      "Collection": {
+        "acquireCount": {
+          "w": {
+            "high": 0,
+            "low": 3,
+            "unsigned": false
+          }
+        }
+      },
+      "Mutex": {
+        "acquireCount": {
+          "r": {
+            "high": 0,
+            "low": 1,
+            "unsigned": false
+          }
+        }
+      }
+    },
+    "flowControl": {
+      "acquireCount": {
+        "high": 0,
+        "low": 3,
+        "unsigned": false
+      }
+    },
+    "responseLength": 45,
+    "protocol": "op_msg",
+    "cpuNanos": 3245948,
+    "millis": 14,
+    "ts": "2026-11-27T03:10:59.870Z",
+    "client": "127.0.0.1",
+    "appName": "mongosh 2.14.2",
+    "allUsers": [],
+    "user": ""
+  }
+]

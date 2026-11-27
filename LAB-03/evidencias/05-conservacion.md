@@ -1,0 +1,29 @@
+﻿# Actividad 5 — Criterio de conservación de bitácoras
+
+Criterio razonado de retención para los siete tipos de registro observados en PostgreSQL 16 (**dba-u3-pg**) y MongoDB 7 (**dba-u3-mongo**), alineado con la guía **NIST SP 800-92** (planeación de gestión de bitácoras) y coherente con **POL-03** y **POL-05**.
+
+## Criterios por tipo de registro
+
+| Registro | Ubicación actual | Riesgo de pérdida observado | Sensibilidad | Tiempo de conservación propuesto | Respaldo / Exportación y control |
+|---|---|---|---|---|---|
+| **Accesos de PostgreSQL** (**log_connections**, **log_disconnections**) | Archivo del colector (**pg_current_logfile()** -> **log/postgresql.log**) | Rotación del archivo; pérdida al recrear o eliminar el contenedor | Media (identificadores de usuario, IP/socket y horarios) | **90 días** en almacenamiento de bitácoras fuera del contenedor; revisión trimestral | Exportación diaria/semanal fuera del contenedor con cálculo de hash SHA-256 (**E5**). |
+| **Cambios de privilegios y estructura** (**GRANT**, **REVOKE**, **CREATE ROLE**, **ALTER**, **CREATE**, **DROP**) | Archivo del colector (**log/postgresql.log**) y vista **dba.bitacora** | Rotación o alteración manual; omisión si **log_statement = 'none'** | **Alta** (puede incluir credenciales en texto claro en **CREATE ROLE**) | **Mínimo 12 meses** (para auditorías anuales e incidentes; plazo legal adicional a confirmar con el área jurídica) | Exportación con redacción previa de contraseñas (**<REDACTED>**), firma/hash SHA-256 y resguardo de solo lectura. |
+| **Modificaciones de datos (**log_statement = 'mod'**)** | Archivo del colector (**log/postgresql.log**) | Rotación del archivo y alto volumen si hay muchas transacciones DML | Media-Alta (incluye sentencias **INSERT**/**UPDATE**/**DELETE** con valores literales) | **90 días** en archivo histórico comprimido | Exportación periódica fuera del motor con control de acceso restringido a DBA y Auditoría. |
+| ****auditoria.cambios_clientes**** | Tabla en **comercial** (PostgreSQL) | Desactivación temporal de **trg_auditoria_clientes** o **DROP**/**TRUNCATE** por superusuario | **Alta** (contiene datos personales en **valores_antes** y **valores_despues**) | **Mínimo 12 meses** para trazabilidad e incidentes (**POL-05**). Plazo a confirmar con el área jurídica respecto a obligaciones fiscales (CFF) y LFPDPPP | Incluida en respaldos diarios de **comercial**; evaluar anonimización de campos personales tras vencer finalidad operativa sin borrar metadatos del evento. |
+| **Bitácora de **mongod**** | **systemLog.path** o salida estándar del contenedor (**docker logs dba-u3-mongo**); **getLog** solo en memoria | **getLog** se pierde al reiniciar; **docker logs** se pierde si se elimina el contenedor | Media (metadatos de red, cliente y eventos de almacenamiento/autenticación) | **90 días** (operación) / **12 meses** (eventos de acceso y arranque) en colector externo | Redirigir logs a volumen persistente o colector central y exportar con hash SHA-256 (**E6-mongodb/bitacora-mongod.log**). |
+| ****comercial.system.profile**** | Colección limitada (capped) de 1 MB en MongoDB | **Se sobrescribe sola** al alcanzar 1 MB de capacidad bajo carga | Media-Alta (almacena documentos **command** y filtros con datos personales) | **30 días** en exportación archivada (en línea dura lo que tarde en llenarse 1 MB) | Exportación programada a archivo JSON con hash SHA-256 antes de sobrescritura (**E6-mongodb/system-profile.json**). |
+| **Instantáneas de privilegios (MongoDB)** | **auditoria.instantaneas_privilegios** | Borrado accidental si no se respalda; no captura cambios intermedios entre capturas | Media-Alta (roles y usuarios del servidor) | **12 meses** | Captura periódica automatizada + inclusión en respaldos diarios de la base **auditoria** en MongoDB. |
+
+### Conflicto normativo detectado (LFPDPPP vs. conservación de auditoría)
+En **auditoria.cambios_clientes** (y en bitácoras con literales DML), conservar **valores_antes** y **valores_despues** de forma indefinida puede entrar en conflicto con la obligación de cancelar o suprimir datos personales cuando concluye la relación comercial (LFPDPPP). Por ello, cualquier plazo definitivo de supresión o conservación fiscal (>12 meses) queda marcado como **Plazo a confirmar con el área jurídica** (revisando LFPDPPP y Código Fiscal de la Federación), proponiendo **anonimizar o pseudonimizar los valores sensibles antiguos** en auditoría histórica en lugar de destruir el registro completo del evento.
+
+## Respuestas a las preguntas de análisis
+
+1. **¿Por qué la bitácora de cambios de privilegios merece más tiempo de conservación que la de consultas rutinarias?**  
+   Porque los cambios de privilegios (**GRANT**/**REVOKE**/**CREATE ROLE**) y estructura (**ALTER**) alteran el modelo de seguridad y pueden ocultar la creación de accesos persistentes o la desactivación de controles que solo se descubren meses después en una auditoría trimestral o anual; además, ocupan muy poco volumen frente al ruido de las consultas rutinarias.
+
+2. **¿Qué control de integridad aplicarás a las bitácoras exportadas?**  
+   El cálculo y resguardo de **huellas criptográficas SHA-256** inmediatamente después de exportar el archivo (como en [E5-bitacora-postgresql.sha256](E5-bitacora-postgresql.sha256) y [hashes-E1-E6.sha256](hashes-E1-E6.sha256)), almacenando los archivos y sus hashes en un repositorio de solo lectura separado del servidor de base de datos.
+
+3. **¿Qué diferencia hay entre conservar una bitácora y respaldar una base de datos?**  
+   **Respaldar una base de datos** captura el estado de los datos y objetos en un punto del tiempo para recuperar la operación ante una pérdida o falla; **conservar una bitácora** preserva la cronología inmutable de eventos y acciones (quién hizo qué, cuándo y desde dónde) para trazabilidad, investigación de incidentes y cumplimiento de auditoría.

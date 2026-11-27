@@ -1,0 +1,9 @@
+﻿# POL-02 — Respaldo
+
+- **Objetivo:** Reducir el riesgo de pérdida definitiva de datos operativos y de evidencia histórica de auditoría y gobierno ante fallos técnicos, errores humanos o incidentes de seguridad.
+- **Alcance:** Aplica a la base **comercial** completa (esquemas **public**, **auditoria**, **gobierno**), a las bitácoras exportadas de PostgreSQL (**dba-u3-pg**) y a las bases **comercial** y **auditoria** de MongoDB (**dba-u3-mongo**) en ambiente de producción.
+- **Regla:** La base de datos **comercial** (datos operativos, auditoría y registro de cambios) debe respaldarse diariamente al cierre operativo, y las bitácoras exportadas deben resguardarse con huella criptográfica SHA-256 fuera del contenedor del motor. Al menos una vez al mes, el DBA debe verificar mediante una prueba controlada en ambiente aislado que el respaldo es íntegro y utilizable. El procedimiento técnico se definirá en la Unidad V.
+- **Responsable:** Decide la Gerencia Comercial junto con Auditoría Interna y la Dirección de TI (criterio de continuidad y periodicidad). Ejecuta y verifica el DBA (custodio), con validación documental de Auditoría Interna sobre los registros de verificación.
+- **Excepciones:** Únicamente durante ventanas de mantenimiento mayor aprobadas por el Comité de Cambios puede posponerse el respaldo diario programado, garantizando un respaldo previo inmediato al inicio de la intervención.
+- **Evidencia:** Actualmente **no existe** evidencia de ejecución ni verificación de respaldos automatizados en el expediente (este control se implementará y evidenciará técnicamente en la Unidad V); para las bitácoras exportadas en esta unidad existe la verificación de integridad mediante [E5-bitacora-postgresql.sha256](../evidencias/E5-bitacora-postgresql.sha256) y los hashes en **evidencias/E6-mongodb/**.
+- **Revisión:** Semestral, o tras cambios mayores en la volumetría o arquitectura de los motores.

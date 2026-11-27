@@ -1,0 +1,9 @@
+﻿# POL-04 — Restauración
+
+- **Objetivo:** Reducir el riesgo de pérdida de integridad operativa, sobreescritura accidental de producción o exposición de datos personales en ambientes no productivos durante una recuperación de datos.
+- **Alcance:** Aplica a todas las restauraciones totales o parciales de la base **comercial** (PostgreSQL 16 y MongoDB 7) en los ambientes de producción, pruebas y desarrollo.
+- **Regla:** Ninguna restauración sobre el ambiente de producción puede ejecutarse sin autorización escrita previa de la Gerencia Comercial y el Comité de Cambios (o autorización de emergencia en incidente declarado), y debe ejecutarse primero una validación de integridad sobre el ambiente de pruebas para confirmar el punto de recuperación antes de afectar producción. Queda prohibido restaurar copias productivas con datos personales reales en desarrollo o pruebas sin enmascaramiento previo. El procedimiento técnico se definirá en la Unidad V.
+- **Responsable:** Decide y autoriza la Gerencia Comercial junto con el Comité de Cambios (y Oficial de Seguridad si involucra incidente o enmascaramiento). Ejecuta el DBA (custodio).
+- **Excepciones:** En una caída total del servicio de producción donde esté comprometida la continuidad operativa, el DBA puede iniciar la restauración hacia el último respaldo verificado con autorización documentada de la Dirección de TI, registrando el folio de emergencia en **gobierno.solicitudes_cambio** dentro de las siguientes 24 horas.
+- **Evidencia:** Registro de autorización en **gobierno.solicitudes_cambio** (cuando exista solicitud de restauración) y bitácora del servidor; actualmente **no existe** registro ni bitácora de pruebas de restauración ejecutadas (se integrará con los procedimientos técnicos de la Unidad V).
+- **Revisión:** Semestral, junto con la política de respaldo (POL-02).

@@ -1,0 +1,11 @@
+﻿# Comparación de trazabilidad: PostgreSQL 16 vs MongoDB 7 Community (**E6**)
+
+Comparación técnica de referencia entre **dba-u3-pg** (PostgreSQL 16) y **dba-u3-mongo** (MongoDB 7 Community) para la integración del expediente en LAB-03.
+
+| Dimensión | PostgreSQL 16 (**dba-u3-pg**) | MongoDB 7 Community (**dba-u3-mongo**) | Implicación para auditoría interna |
+|---|---|---|---|
+| **Registro de conexiones** | **log_connections = on**, **log_disconnections = on** en bitácora del colector (**E1**). | Eventos de conexión/autenticación en **bitacora-mongod.log** (stdout del contenedor o **systemLog.path**). | En MongoDB sin almacenamiento externo de logs, reiniciar o recrear el contenedor pierde el historial. |
+| **Auditoría de consultas y cambios de datos** | **log_statement = 'mod'** (registra DML/DDL) + disparador **trg_auditoria_clientes** hacia **auditoria.cambios_clientes** (**valores_antes** / **valores_despues**). | Perfilador **comercial.system.profile** (nivel 2 en **E6-mongodb/system-profile.json**); colección capped de 1 MB sin valores anteriores del documento. | MongoDB Community **no incluye auditoría nativa** (**auditLog** es exclusivo de MongoDB Enterprise); **system.profile** se sobrescribe al llenar 1 MB. |
+| **Auditoría de privilegios** | **GRANT** / **REVOKE** / **CREATE ROLE** registrados directamente en **dba.bitacora** cuando **log_statement >= 'ddl'**. | No existe bitácora nativa de cambios de roles en Community; se suple con instantáneas periódicas en **auditoria.instantaneas_privilegios**. | Las instantáneas detectan qué cambió entre capturas, pero no quién ni cuándo exactamente ejecutó el cambio entre dos capturas. |
+| **Riesgo de secretos en bitácora** | **CREATE ROLE ... PASSWORD** queda en texto claro si no se redacta (mitigado en **E5** con **<REDACTED>**). | Credenciales o filtros sensibles pueden quedar expuestos si se registran comandos completos en depuración. | Toda exportación debe revisarse y redactarse antes de entregarse a terceros. |
+| **Consistencia de datos entre motores** | **public.clientes**: María García (**id = 2**) tiene **rfc = GAMA900412XY9**. | **comercial.clientes**: María García (**cliente_id_pg = 2**) tiene **rfc = GAMA900412XY8**. | Sin un propietario único de la definición de clientes o sincronización controlada, ambos motores divergen y generan hallazgos de calidad. |
